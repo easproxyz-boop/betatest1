@@ -2,41 +2,46 @@
 // IMPORTS
 // ==========================
 const express = require("express");
-const http = require("http"); // Or https if you want SSL
+const http = require("http");
 const { Server } = require("socket.io");
 const mysql = require("mysql2");
 const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
 
 // ==========================
 // APP + SERVER
 // ==========================
 const app = express();
-const PORT = 65002; // Use the port you mentioned
+const PORT = 65002; // Use environment variable if available
+const server = http.createServer(app);
+
+app.set('trust proxy', 1);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173", // Vite frontend
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 // ==========================
 // MIDDLEWARE
 // ==========================
-app.use(cors({
-  origin: "http://localhost:5173", // Frontend origin
-  credentials: true,
-}));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 
 // ==========================
 // DATABASE CONNECTION
 // ==========================
 const db = mysql.createPool({
-  host: "76.13.178.211",
-  port: 65002,
-  user: "u984996977",
+  host: "76.13.178.211",       // Updated IP
+  port: 65002,                 // Added custom port
+  user: "u984996977",          // Updated username
   password: "1oyy+gdpBEm=",
-  database: "u984996977_betatest",
+  database: "u984996977_betatest", // Keep your database name
   waitForConnections: true,
   connectionLimit: 10,
 });
-
 // ==========================
 // REST API
 // ==========================
@@ -57,16 +62,6 @@ app.get("/api/users", (req, res) => {
 // ==========================
 // SOCKET.IO
 // ==========================
-const server = http.createServer(app);
-
-const io = new Server(server, {
-  cors: {
-    origin: "https://betatest.actioncenteres.org",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
 io.on("connection", (socket) => {
   console.log(`Client connected: ${socket.id}`);
 
@@ -94,5 +89,5 @@ io.on("connection", (socket) => {
 // START SERVER
 // ==========================
 server.listen(PORT, () => {
-  console.log(`Server running on https://betatest.actioncenteres.org:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

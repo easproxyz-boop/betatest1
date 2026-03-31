@@ -33,14 +33,14 @@ app.use(express.json());
 const db = mysql.createPool({
   host: "betatest.actioncenteres.org",
   user: "u984996977_betatest",
-  password: "1oyy+gdpBEm=", // MySQL password
+  password: "1oyy+gdpBEm=",
   database: "u984996977_betatest",
-  port: 3306, // Add this if not default
+  port: 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  ssl: { rejectUnauthorized: true },
 });
-
 // ==========================
 // REST API
 

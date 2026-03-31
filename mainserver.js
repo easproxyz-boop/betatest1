@@ -19,7 +19,7 @@ const PORT = 65002; // Use the port you mentioned
 // MIDDLEWARE
 // ==========================
 app.use(cors({
-  origin: "https://betatest.actioncenteres.org:65002", // Frontend origin
+  origin: "https://betatest.actioncenteres.org", // Frontend origin
   credentials: true,
 }));
 app.use(express.json());
@@ -61,7 +61,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://betatest.actioncenteres.org:65002",
+    origin: "https://betatest.actioncenteres.org",
     methods: ["GET", "POST"],
     credentials: true,
   },

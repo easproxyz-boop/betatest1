@@ -13,25 +13,12 @@ const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
 
-// Important for working behind Hostinger reverse proxy / HTTPS
-app.set("trust proxy", 1);
-
-// ==========================
-// SOCKET.IO
-// ==========================
-const io = new Server(server, {
-  cors: {
-    origin: "*", // Allow all domains for testing; later restrict to frontend domain
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
 // ==========================
 // MIDDLEWARE
 // ==========================
 app.use(cors({
-  origin: "*", // Allow all domains; later replace with frontend URL
+  origin: "http://localhost:5173", // Vite frontend
+  methods: ["GET", "POST"],
   credentials: true,
 }));
 app.use(express.json());
@@ -39,23 +26,21 @@ app.use(express.json());
 // ==========================
 // DATABASE CONNECTION
 // ==========================
-// On Hostinger Cloud, use 'localhost' instead of public IP
 const db = mysql.createPool({
-  host: "localhost", // Internal connection
+  host: "148.222.53.46",
   user: "u984996977_betatest",
   password: "1oyy+gdpBEm=",
   database: "u984996977_betatest",
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
 });
 
-// Optional: Test the DB connection
+// Optional: check database connection on startup
 db.getConnection((err, connection) => {
   if (err) {
-    console.error("MySQL connection error:", err);
+    console.error("Database connection failed:", err);
   } else {
-    console.log("MySQL connected!");
+    console.log("Connected to MySQL database");
     connection.release();
   }
 });
@@ -70,7 +55,7 @@ app.get("/api/users", (req, res) => {
   `;
   db.query(query, (err, results) => {
     if (err) {
-      console.error("DB query error:", err);
+      console.error(err);
       return res.status(500).json({ success: false, message: "Database error" });
     }
     res.json({ success: true, data: results });
@@ -78,8 +63,16 @@ app.get("/api/users", (req, res) => {
 });
 
 // ==========================
-// SOCKET.IO EVENTS
+// SOCKET.IO
 // ==========================
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
@@ -90,7 +83,7 @@ io.on("connection", (socket) => {
     `;
     db.query(query, (err, results) => {
       if (err) {
-        console.error("DB query error (socket):", err);
+        console.error(err);
         socket.emit("users_data", []);
       } else {
         socket.emit("users_data", results);
@@ -106,7 +99,7 @@ io.on("connection", (socket) => {
 // ==========================
 // START SERVER
 // ==========================
-const PORT = process.env.PORT || 3000; // Use env PORT set by Hostinger
+const PORT = 3000;
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

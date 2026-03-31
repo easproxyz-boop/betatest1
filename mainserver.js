@@ -14,7 +14,6 @@ const app = express();
 const PORT = 3000; 
 const server = http.createServer(app);
 
-app.set('trust proxy', 1);
 
 const io = new Server(server, {
   cors: {
@@ -30,11 +29,15 @@ const io = new Server(server, {
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 
+app.set('trust proxy', 1);
+
+
+
 // ==========================
 // DATABASE CONNECTION
 // ==========================
 const db = mysql.createPool({
-  host: "srv2095.hstgr.io",       // Updated IP
+  host: "148.222.53.46",       // Updated IP
   user: "u984996977_betatest",          // Updated username
   password: "#Zyqsxftt0301",
   database: "u984996977_betatest", // Keep your database name

@@ -1,6 +1,3 @@
-// ==========================
-// IMPORTS
-// ==========================
 require("dotenv").config();
 const express = require("express");
 const http = require("http");
@@ -8,18 +5,29 @@ const { Server } = require("socket.io");
 const mysql = require("mysql2");
 const cors = require("cors");
 
-// ==========================
-// APP + SERVER
-// ==========================
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 
-// Allowed Origins
+// ✅ ENV VALIDATION
+if (!process.env.DB_HOST) {
+  throw new Error("❌ Missing DB ENV variables");
+}
+
+// ==========================
+// CORS
+// ==========================
 const allowedOrigins = [
   "http://localhost:5173",
   "https://betatest.actioncenteres.org"
 ];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
+app.use(express.json());
 
 // ==========================
 // SOCKET.IO
@@ -27,98 +35,54 @@ const allowedOrigins = [
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
-    methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
 // ==========================
-// MIDDLEWARE
-// ==========================
-
-// Better CORS handling
-app.use(cors({
-  origin: (origin, callback) => {
-    // allow non-browser tools (like Postman)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      console.error("Blocked by CORS:", origin);
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
-
-app.use(express.json());
-
-// if using reverse proxy (nginx/cloudflare)
-app.set("trust proxy", 1);
-
-// ==========================
-// DATABASE CONNECTION
+// DATABASE
 // ==========================
 const db = mysql.createPool({
-  host:"148.222.53.46",
-  user:"u984996977_betatest",
-  password:"#Zyqsxftt030199",
-  database:"u984996977_betatest",
-  waitForConnections: true,
-  connectionLimit: 10,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
-// Optional: test DB connection
-db.getConnection((err, conn) => {
-  if (err) {
-    console.error("❌ DB Connection failed:", err.message);
-  } else {
-    console.log("DB Connected");
-    conn.release();
-  }
-});
+// ✅ REUSABLE QUERY
+const getUsers = (callback) => {
+  const query = `
+    SELECT 
+      dt_num, dt_google_id, dt_resident_id, dt_household_id, 
+      dt_household_head, dt_present_firstname, 
+      dt_present_middlename, dt_present_lastname, dt_present_suffix
+    FROM tbl_1_residency_profile_info 
+  `;
+
+  db.query(query, callback);
+};
 
 // ==========================
 // REST API
 // ==========================
 app.get("/api/users", (req, res) => {
-  const query = `
-    SELECT dt_google_name, dt_google_email, dt_external_id, dt_date_added
-    FROM tbl_user_account_main
-  `;
-
-  db.query(query, (err, results) => {
+  getUsers((err, results) => {
     if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Database error"
-      });
+      return res.status(500).json({ success: false });
     }
-
-    res.json({
-      success: true,
-      data: results
-    });
+    res.json({ success: true, data: results });
   });
 });
 
 // ==========================
-// SOCKET.IO
+// SOCKET
 // ==========================
 io.on("connection", (socket) => {
-  console.log("🔌 Client connected:", socket.id);
+  console.log("🔌 Connected:", socket.id);
 
   socket.on("fetch_users", () => {
-    const query = `
-      SELECT dt_google_name, dt_google_email, dt_external_id, dt_date_added
-      FROM tbl_user_account_main
-    `;
-
-    db.query(query, (err, results) => {
+    getUsers((err, results) => {
       if (err) {
-        console.error("Database error:", err);
         socket.emit("users_data", []);
       } else {
         socket.emit("users_data", results);
@@ -127,15 +91,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("❌ Client disconnected:", socket.id);
+    console.log("❌ Disconnected:", socket.id);
   });
 });
 
 // ==========================
-// START SERVER
+// START
 // ==========================
-
-// IMPORTANT: allow external access
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Running on port ${PORT}`);
 });

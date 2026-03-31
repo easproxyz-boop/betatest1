@@ -13,11 +13,15 @@ const cors = require("cors");
 const app = express();
 const PORT = 65002; 
 const server = http.createServer(app);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://betatest.actioncenteres.org"
+];
 
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -26,7 +30,18 @@ const io = new Server(server, {
 // ==========================
 // MIDDLEWARE
 // ==========================
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.set('trust proxy', 1);

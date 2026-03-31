@@ -85,7 +85,7 @@ db.getConnection((err, conn) => {
 app.get("/api/users", (req, res) => {
   const query = `
     SELECT dt_num, dt_google_id, dt_resident_id, dt_household_id, dt_household_head, dt_present_firstname, dt_present_middlename, dt_present_lastname, dt_present_suffix
-    FROM tbl_1_residency_profile_info
+    FROM tbl_1_residency_profile_info WHERE 1 LIMIT 10
   `;
 
   db.query(query, (err, results) => {
@@ -113,7 +113,7 @@ io.on("connection", (socket) => {
   socket.on("fetch_users", () => {
     const query = `
     SELECT dt_num, dt_google_id, dt_resident_id, dt_household_id, dt_household_head, dt_present_firstname, dt_present_middlename, dt_present_lastname, dt_present_suffix
-    FROM tbl_1_residency_profile_info
+    FROM tbl_1_residency_profile_info WHERE 1 LIMIT 10
     `;
 
     db.query(query, (err, results) => {

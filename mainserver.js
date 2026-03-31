@@ -35,7 +35,7 @@ app.use(express.json());
 // ==========================
 const db = mysql.createPool({
   host: "76.13.178.211",       // Updated IP
-  user: "u984996977",          // Updated username
+  user: "u984996977_betatest",          // Updated username
   password: "1oyy+gdpBEm=",
   database: "u984996977_betatest", // Keep your database name
   waitForConnections: true,

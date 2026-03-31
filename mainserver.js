@@ -12,7 +12,7 @@ const cors = require("cors");
 // APP + SERVER
 // ==========================
 const app = express();
-const PORT = 65002;
+const PORT = 3000;
 const server = http.createServer(app);
 
 // Allowed Origins
@@ -62,7 +62,6 @@ app.set("trust proxy", 1);
 // ==========================
 const db = mysql.createPool({
   host:"148.222.53.46",
-  port: "65002",
   user:"u984996977_betatest",
   password:"#Zyqsxftt030199",
   database:"u984996977_betatest",

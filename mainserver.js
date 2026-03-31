@@ -32,9 +32,9 @@ app.use(express.json());
 // ==========================
 const db = mysql.createPool({
   host: "localhost",
-  user: "root",
-  password: "", // MySQL password
-  database: "ESPGuseraccount",
+  user: "u984996977_betatest",
+  password: "#Zyqsxftt0301", // MySQL password
+  database: "u984996977_betatest",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

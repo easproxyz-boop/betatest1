@@ -42,6 +42,8 @@ const db = mysql.createPool({
 
 // ==========================
 // REST API
+
+
 // ==========================
 app.get("/api/users", (req, res) => {
   const query = `

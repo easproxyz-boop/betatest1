@@ -11,7 +11,7 @@ const cors = require("cors");
 // APP + SERVER
 // ==========================
 const app = express();
-const PORT = 3000; 
+const PORT = 65002; 
 const server = http.createServer(app);
 
 

@@ -37,8 +37,9 @@ app.set('trust proxy', 1);
 // DATABASE CONNECTION
 // ==========================
 const db = mysql.createPool({
-  host: "localhost",       // Updated IP
-  user: "u984996977_betatest",          // Updated username
+  host: "76.13.178.211",       // Updated IP
+  port: "65002",
+  user: "u984996977",          // Updated username
   password: "#Zyqsxftt0301",
   database: "u984996977_betatest", // Keep your database name
   waitForConnections: true,

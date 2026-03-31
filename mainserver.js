@@ -56,7 +56,7 @@ const getUsers = (callback) => {
       dt_num, dt_google_id, dt_resident_id, dt_household_id, 
       dt_household_head, dt_present_firstname, 
       dt_present_middlename, dt_present_lastname, dt_present_suffix
-    FROM tbl_1_residency_profile_info 
+    FROM tbl_1_residency_profile_info WHERE 1 LIMIT 2000
   `;
 
   db.query(query, callback);

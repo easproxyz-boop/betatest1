@@ -35,6 +35,7 @@ const db = mysql.createPool({
   user: "u984996977_betatest",
   password: "1oyy+gdpBEm=", // MySQL password
   database: "u984996977_betatest",
+  port: 3306, // Add this if not default
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

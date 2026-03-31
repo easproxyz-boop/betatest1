@@ -11,7 +11,7 @@ const cors = require("cors");
 // APP + SERVER
 // ==========================
 const app = express();
-const PORT = 65002; 
+const PORT = 3000; 
 const server = http.createServer(app);
 
 
@@ -37,9 +37,8 @@ app.set('trust proxy', 1);
 // DATABASE CONNECTION
 // ==========================
 const db = mysql.createPool({
-  host: "localhost",       // Updated IP
-  port: "65002",
-  user: "u984996977_betatest",          // Updated username
+  host: "148.222.53.46",       // Updated IP
+  user: "u984996977_betatest",          // Updated usernameddd
   password: "#Zyqsxftt030199",
   database: "u984996977_betatest", // Keep your database name
   waitForConnections: true,

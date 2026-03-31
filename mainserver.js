@@ -31,7 +31,7 @@ app.use(express.json());
 // DATABASE CONNECTION
 // ==========================
 const db = mysql.createPool({
-  host: "76.13.178.211",
+  host: "betatest.actioncenteres.org",
   user: "u984996977_betatest",
   password: "1oyy+gdpBEm=", // MySQL password
   database: "u984996977_betatest",

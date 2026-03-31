@@ -31,15 +31,12 @@ app.use(express.json());
 // DATABASE CONNECTION
 // ==========================
 const db = mysql.createPool({
-  host: "betatest.actioncenteres.org",
+  host: "localhost", // connect internally
   user: "u984996977_betatest",
   password: "1oyy+gdpBEm=",
   database: "u984996977_betatest",
-  port: 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-  ssl: { rejectUnauthorized: true },
 });
 // ==========================
 // REST API

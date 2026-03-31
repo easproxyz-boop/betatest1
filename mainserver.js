@@ -11,7 +11,7 @@ const cors = require("cors");
 // APP + SERVER
 // ==========================
 const app = express();
-const PORT = 3000; // Use environment variable if available
+const PORT = 65002; // Use environment variable if available
 const server = http.createServer(app);
 
 app.set('trust proxy', 1);
@@ -36,7 +36,7 @@ app.use(express.json());
 const db = mysql.createPool({
   host: "76.13.178.211",       // Updated IP
   port: 65002,                 // Added custom port
-  user: "u984996977",          // Updated username
+  user: "u984996977_betatest",          // Updated username
   password: "1oyy+gdpBEm=",
   database: "u984996977_betatest", // Keep your database name
   waitForConnections: true,

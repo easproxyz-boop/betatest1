@@ -13,13 +13,13 @@ const path = require("path");
 // APP + SERVER
 // ==========================
 const app = express();
-const PORT = 3000; // Use the port you mentioned
+const PORT = 65002; // Use the port you mentioned
 
 // ==========================
 // MIDDLEWARE
 // ==========================
 app.use(cors({
-  origin: "http://http://localhost:5173", // Frontend origin
+  origin: "http://localhost:5173", // Frontend origin
   credentials: true,
 }));
 app.use(express.json());

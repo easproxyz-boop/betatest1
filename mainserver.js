@@ -18,7 +18,7 @@ app.set('trust proxy', 1);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Vite frontend
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -37,7 +37,7 @@ const db = mysql.createPool({
   host: "76.13.178.211",       // Updated IP
   port: 65002,                 // Added custom port
   user: "u984996977_betatest",          // Updated username
-  password: "1oyy+gdpBEm=",
+  password: "#Zyqsxftt0301",
   database: "u984996977_betatest", // Keep your database name
   waitForConnections: true,
   connectionLimit: 10,

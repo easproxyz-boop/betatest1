@@ -11,10 +11,10 @@ const cors = require("cors");
 // APP + SERVER
 // ==========================
 const app = express();
+const PORT = 3000; // Use environment variable if available
 const server = http.createServer(app);
 
 app.set('trust proxy', 1);
-
 
 const io = new Server(server, {
   cors: {
@@ -34,17 +34,16 @@ app.use(express.json());
 // DATABASE CONNECTION
 // ==========================
 const db = mysql.createPool({
-  host: "148.222.53.46", // connect internally
-  user: "u984996977_betatest",
+  host: "76.13.178.211",       // Updated IP
+  port: 65002,                 // Added custom port
+  user: "u984996977",          // Updated username
   password: "1oyy+gdpBEm=",
-  database: "u984996977_betatest",
+  database: "u984996977_betatest", // Keep your database name
   waitForConnections: true,
   connectionLimit: 10,
 });
 // ==========================
 // REST API
-
-
 // ==========================
 app.get("/api/users", (req, res) => {
   const query = `
@@ -53,7 +52,7 @@ app.get("/api/users", (req, res) => {
   `;
   db.query(query, (err, results) => {
     if (err) {
-      console.error(err);
+      console.error("Database error:", err);
       return res.status(500).json({ success: false, message: "Database error" });
     }
     res.json({ success: true, data: results });
@@ -64,7 +63,7 @@ app.get("/api/users", (req, res) => {
 // SOCKET.IO
 // ==========================
 io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
+  console.log(`Client connected: ${socket.id}`);
 
   socket.on("fetch_users", () => {
     const query = `
@@ -73,7 +72,7 @@ io.on("connection", (socket) => {
     `;
     db.query(query, (err, results) => {
       if (err) {
-        console.error(err);
+        console.error("Database error:", err);
         socket.emit("users_data", []);
       } else {
         socket.emit("users_data", results);
@@ -82,14 +81,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
+    console.log(`Client disconnected: ${socket.id}`);
   });
 });
 
 // ==========================
 // START SERVER
 // ==========================
-const PORT = 3000;
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

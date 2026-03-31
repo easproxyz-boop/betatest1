@@ -35,7 +35,6 @@ app.use(express.json());
 // ==========================
 const db = mysql.createPool({
   host: "148.222.53.46", // connect internally
-  port: 65002,
   user: "u984996977_betatest",
   password: "1oyy+gdpBEm=",
   database: "u984996977_betatest",

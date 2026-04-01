@@ -84,8 +84,8 @@ db.getConnection((err, conn) => {
 // ==========================
 app.get("/api/users", (req, res) => {
   const query = `
-    SELECT dt_num, dt_google_id, dt_resident_id, dt_household_id, dt_household_head, dt_present_firstname, dt_present_middlename, dt_present_lastname, dt_present_suffix
-    FROM tbl_1_residency_profile_info WHERE 1 LIMIT 10
+    SELECT dt_num, dt_date_added, dt_google_id, dt_google_email, dt_google_name, dt_google_profile_picture, dt_external_id
+    FROM tbl_user_account_main
   `;
 
   db.query(query, (err, results) => {
@@ -112,8 +112,8 @@ io.on("connection", (socket) => {
 
   socket.on("fetch_users", () => {
     const query = `
-    SELECT dt_num, dt_google_id, dt_resident_id, dt_household_id, dt_household_head, dt_present_firstname, dt_present_middlename, dt_present_lastname, dt_present_suffix
-    FROM tbl_1_residency_profile_info WHERE 1 LIMIT 10
+ SELECT dt_num, dt_date_added, dt_google_id, dt_google_email, dt_google_name, dt_google_profile_picture, dt_external_id
+    FROM tbl_user_account_main
     `;
 
     db.query(query, (err, results) => {
